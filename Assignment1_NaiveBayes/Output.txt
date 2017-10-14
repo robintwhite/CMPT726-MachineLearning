@@ -1,0 +1,11 @@
+Players weight, unconditional:
+Maximum likelihood estimate mu = 0.433592
+Maximum likelihood estimate sigma_squared = 0.023129
+
+Players weight, conditional on GP > 0 == True:
+Maximum likelihood estimate mu = 0.453876
+Maximum likelihood estimate sigma_squared = 0.022293
+
+Players weight, conditional on GP > 0 == False:
+Maximum likelihood estimate mu = 0.418074
+Maximum likelihood estimate sigma_squared = 0.023213
