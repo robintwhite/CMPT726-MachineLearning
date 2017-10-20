@@ -172,7 +172,7 @@ for L in lambdas:
         #Note .append inserts to 0 position
         #List of weights for trained data on each validation set
         weightVList.insert(group_id, normalEq(L, x_data, x_dataTarget).tolist())
-        #Squared loss for test data in validation set Ignore:(1/(2*ML_var(t_dataTarget)*len(t_data)))*
+        #Squared loss for test data in validation set Ignore:(1/(2*np.sqrt(ML_var(t_dataTarget))*len(t_data)))*
         LossList[group_id] = squaredErr(weightVList[group_id], t_data, t_dataTarget)
         
     validationError[i] = ML_mean(LossList)
@@ -181,7 +181,7 @@ for L in lambdas:
     weightVavg.insert(i, [ML_mean(x) for x in np.asmatrix(a.reshape(a.shape[0],a.shape[1])).T])
     #Insert at end of array
     
-    #test Ignore:(1/(2*ML_var(t_test)*len(x_test)))*
+    #test Ignore:(1/(2*np.sqrt(ML_var(t_test))*len(x_test)))*
     t = np.asarray(weightVavg)[i]
     testError[i] = squaredErr(np.transpose(np.asmatrix(t)), x_test, t_test)
     
