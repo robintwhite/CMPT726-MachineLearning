@@ -135,7 +135,7 @@ lambdas =[0,0.01,0.1,1,10,100,1000]
 
 #shuffle dataset 
 temp_data = x_train.join(t_train)
-temp_data = temp_data.reindex(np.random.permutation(temp_data.index))#np.random.permutation(temp_data.index)
+temp_data = temp_data.reindex(np.random.permutation(temp_data.index))
 temp_data = temp_data.reset_index(drop=True) #reset index to call rows
 
 #Cross validation set-up
@@ -147,9 +147,10 @@ else:
     LossList = np.zeros(N)
     
 weightVList = [] #Weight list for validation runs
+weightVavg = [] #Weight list for each lambda
 validationError = np.zeros(len(lambdas)) #average loss list
 testError = np.zeros(len(lambdas)) #test loss list
-weightVavg = []
+
 #Make groups of data
 grouped = temp_data.groupby(temp_data.index.to_series() // div)
 #iterate through each group, assign as test set and rest as train set, 
@@ -171,7 +172,7 @@ for L in lambdas:
         #Note .append inserts to 0 position
         #List of weights for trained data on each validation set
         weightVList.insert(group_id, normalEq(L, x_data, x_dataTarget).tolist())
-        #Squared loss for test data in validation set
+        #Squared loss for test data in validation set 
         LossList[group_id] = (1/(2*ML_var(t_dataTarget)*len(t_data)))*squaredErr(weightVList[group_id], t_data, t_dataTarget)
         
     validationError[i] = ML_mean(LossList)
@@ -180,7 +181,7 @@ for L in lambdas:
     weightVavg.insert(i, [ML_mean(x) for x in np.asmatrix(a.reshape(a.shape[0],a.shape[1])).T])
     #Insert at end of array
     
-    #test
+    #test 
     t = np.asarray(weightVavg)[i]
     testError[i] = (1/(2*ML_var(t_test)*len(x_test)))*squaredErr(np.transpose(np.asmatrix(t)), x_test, t_test)
     
@@ -191,20 +192,30 @@ for L in lambdas:
 #Results
 lmb = lambdas[validationError.tolist().index(min(validationError))]
 error = validationError[validationError.tolist().index(min(validationError))]
+test_error = testError[validationError.tolist().index(min(validationError))]
 print("{}{:.4f}".format("Best Lambda: ", lmb))
-print("{}{:.4f}".format("Error at Best Lambda: ", error))
+print("{}{:.6f}".format("Validation Error at Best Lambda: ", error))
+print("{}{:.6f}".format("Test Error at Best Lambda: ", test_error))
 #%%Plot
-fig, ax = plt.subplots()
-ax.plot(lambdas, validationError,label='Validation error')
-ax.plot(lambdas, testError,label='test error')
-ax.plot(lmb,error,marker='o',color='r',label="Best Lambda")
-ax.set_xscale('symlog')
+fig, ax1 = plt.subplots()
+lns1 = ax1.plot(lambdas, validationError, 'b-',label='Validation error')
+lns2 = ax1.plot(lmb,error,marker='o',color='k',label="Best Lambda")
+ax1.set_xscale('symlog')
+ax1.set_ylabel('Mean Squared Error', color='b')
+ax1.tick_params('y', colors='b')
+ax1.set_xlabel('Lambda')
+
+ax2 = ax1.twinx()
+lns3 = ax2.plot(lambdas, testError,'r-', label='Test error')
+ax2.set_ylabel('Mean Squared Error', color='r')
+ax2.tick_params('y', colors='r')
 #ax.semilogx(lambdas, validationError,label='Validation error')
 #ax.semilogx(lambdas, testError,label='test error')
 #ax.semilogx(lmb,error,marker='o',color='r',label="Best Lambda")
-
-plt.ylabel('Mean Squared Error')
-#plt.text(lmb, error, 'Best Lambda', fontsize=15)
-plt.legend()
-plt.xlabel('Lambda')
+# added these three lines
+lns = lns1+lns2+lns3
+labs = [l.get_label() for l in lns]
+ax1.legend(lns, labs, loc=0)
+#plt.legend()
+fig.tight_layout()
 plt.show()
