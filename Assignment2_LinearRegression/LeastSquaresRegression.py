@@ -146,7 +146,6 @@ else:
     div = len(temp_data)//(N-1)
     LossList = np.zeros(N)
     
-weightVList = [] #Weight list for validation runs
 weightVavg = [] #Weight list for each lambda
 validationError = np.zeros(len(lambdas)) #average loss list
 testError = np.zeros(len(lambdas)) #test loss list
@@ -157,6 +156,7 @@ grouped = temp_data.groupby(temp_data.index.to_series() // div)
 #move through each group
 i = 0
 for L in lambdas:
+    weightVList = [] #Weight list for validation runs
     #validation
     for group_id, group in grouped: 
         #test group
