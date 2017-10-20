@@ -201,21 +201,23 @@ fig, ax1 = plt.subplots()
 lns1 = ax1.plot(lambdas, validationError, 'b-',label='Validation error')
 lns2 = ax1.plot(lmb,error,marker='o',color='k',label="Best Lambda")
 ax1.set_xscale('symlog')
-ax1.set_ylabel('Sum Squared Error', color='b')
-ax1.tick_params('y', colors='b')
+ax1.set_ylabel('Sum Squared Error', color='k')
+ax1.tick_params('y', colors='k')
 ax1.set_xlabel('Lambda')
 
-ax2 = ax1.twinx()
-lns3 = ax2.plot(lambdas, testError,'r-', label='Test error')
-ax2.set_ylabel('Sum Squared Error', color='r')
-ax2.tick_params('y', colors='r')
+#ax2 = ax1.twinx() #For secondary y-axis
+lns3 = ax1.plot(lambdas, testError,'r-', label='Test error')
+#ax2.set_ylabel('Sum Squared Error', color='r')
+#ax2.tick_params('y', colors='r')
+
 #ax.semilogx(lambdas, validationError,label='Validation error')
 #ax.semilogx(lambdas, testError,label='test error')
 #ax.semilogx(lmb,error,marker='o',color='r',label="Best Lambda")
-# added these three lines
+
+# Legend
 lns = lns1+lns2+lns3
 labs = [l.get_label() for l in lns]
 ax1.legend(lns, labs, loc=0)
-#plt.legend()
+
 fig.tight_layout()
 plt.show()
