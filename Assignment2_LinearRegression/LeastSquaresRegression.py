@@ -172,8 +172,8 @@ for L in lambdas:
         #Note .append inserts to 0 position
         #List of weights for trained data on each validation set
         weightVList.insert(group_id, normalEq(L, x_data, x_dataTarget).tolist())
-        #Squared loss for test data in validation set 
-        LossList[group_id] = (1/(2*ML_var(t_dataTarget)*len(t_data)))*squaredErr(weightVList[group_id], t_data, t_dataTarget)
+        #Squared loss for test data in validation set Ignore:(1/(2*ML_var(t_dataTarget)*len(t_data)))*
+        LossList[group_id] = squaredErr(weightVList[group_id], t_data, t_dataTarget)
         
     validationError[i] = ML_mean(LossList)
     a = np.asarray(weightVList)
@@ -181,9 +181,9 @@ for L in lambdas:
     weightVavg.insert(i, [ML_mean(x) for x in np.asmatrix(a.reshape(a.shape[0],a.shape[1])).T])
     #Insert at end of array
     
-    #test 
+    #test Ignore:(1/(2*ML_var(t_test)*len(x_test)))*
     t = np.asarray(weightVavg)[i]
-    testError[i] = (1/(2*ML_var(t_test)*len(x_test)))*squaredErr(np.transpose(np.asmatrix(t)), x_test, t_test)
+    testError[i] = squaredErr(np.transpose(np.asmatrix(t)), x_test, t_test)
     
     i += 1
 
@@ -201,13 +201,13 @@ fig, ax1 = plt.subplots()
 lns1 = ax1.plot(lambdas, validationError, 'b-',label='Validation error')
 lns2 = ax1.plot(lmb,error,marker='o',color='k',label="Best Lambda")
 ax1.set_xscale('symlog')
-ax1.set_ylabel('Mean Squared Error', color='b')
+ax1.set_ylabel('Sum Squared Error', color='b')
 ax1.tick_params('y', colors='b')
 ax1.set_xlabel('Lambda')
 
 ax2 = ax1.twinx()
 lns3 = ax2.plot(lambdas, testError,'r-', label='Test error')
-ax2.set_ylabel('Mean Squared Error', color='r')
+ax2.set_ylabel('Sum Squared Error', color='r')
 ax2.tick_params('y', colors='r')
 #ax.semilogx(lambdas, validationError,label='Validation error')
 #ax.semilogx(lambdas, testError,label='test error')
