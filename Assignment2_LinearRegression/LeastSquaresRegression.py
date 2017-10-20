@@ -9,6 +9,7 @@ import pandas as pd
 import numpy as np
 import copy
 import matplotlib.pyplot as plt
+import csv
 
 #Could use numpy, but required to write ourselves
 #function for mu (mean)
@@ -85,7 +86,7 @@ def normalEq(L, x_data, t_data):
     I = np.identity(x_data.shape[1])
     x_matrix = np.matrix(x_data)
     t_matrix = np.matrix(t_data)
-    return np.linalg.pinv(L*I - x_matrix.T*x_matrix)*x_matrix.T*t_matrix.T
+    return np.linalg.pinv(L*I + x_matrix.T*x_matrix)*x_matrix.T*t_matrix.T
 
 #read data from file
 df = pd.read_csv(r"preprocessed_datasets.csv")
@@ -131,7 +132,7 @@ x_test.insert(0, 'w0', np.ones(len(x_test), dtype=np.int))
 #k-fold cross validation
 #using 10 in this case
 N = 10 #number of divisions 
-lambdas =[0,0.01,0.1,1,10,100,1000]
+lambdas =[0,0.001,0.01,0.1,1,10,100,1000]
 
 #shuffle dataset 
 temp_data = x_train.join(t_train)
@@ -190,23 +191,72 @@ for L in lambdas:
 
 #%%
 #Results
-lmb = lambdas[validationError.tolist().index(min(validationError))]
-error = validationError[validationError.tolist().index(min(validationError))]
-test_error = testError[validationError.tolist().index(min(validationError))]
-print("{}{:.4f}".format("Best Lambda: ", lmb))
-print("{}{:.6f}".format("Validation Error at Best Lambda: ", error))
-print("{}{:.6f}".format("Test Error at Best Lambda: ", test_error))
+#index for lambda with lowest validation error
+index = validationError.tolist().index(min(validationError))
+s = np.asarray(weightVavg)
+#5 weights with largest value from lambda with lowest error
+b = sorted(range(len(s[index])), key=lambda i: s[index][i])[-5:]
+print("{}{}".format("Top 5 terms with strongest weight (lowest to highest): ", x_test.columns[b]))
+lmbV = lambdas[index]
+errorV = validationError[index]
+test_errorV = testError[index]
+print("{}{:.4f}".format("Best Lambda: ", lmbV))
+print("{}{:.6f}".format("Validation Error at Best Lambda: ", errorV))
+print("{}{:.6f}".format("Test Error at Best Lambda: ", test_errorV))
+
+#index for lambda with lowest test error
+index = testError.tolist().index(min(testError))
+s = np.asarray(weightVavg)
+b = sorted(range(len(s[index])), key=lambda i: s[index][i])[-5:]
+print("{}{}".format("Top 5 terms with strongest weight (lowest to highest): ", x_test.columns[b]))
+lmbT = lambdas[index]
+errorT = validationError[index]
+test_errorT = testError[index]
+print("{}{:.4f}".format("Best Lambda: ", lmbT))
+print("{}{:.6f}".format("Validation Error at Best Lambda: ", errorT))
+print("{}{:.6f}".format("Test Error at Best Lambda: ", test_errorT))
+
+#print to file
+filename = 'Output.txt'
+with open(filename, "w") as text_file:
+    writer = csv.writer(text_file, delimiter='\t')
+    print("{}{:.4f}".format("Best Lambda from Validation: ", lmbV),file=text_file)
+    print("{}{:.6f}".format("Validation Error at Best Lambda: ", errorV),file=text_file)
+    print("{}{:.6f}".format("Test Error at Best Lambda: ", test_errorV),file=text_file)
+    print("\n", file=text_file)
+    print("{}{:.4f}".format("Best Lambda from Test: ", lmbT),file=text_file)
+    print("{}{:.6f}".format("Validation Error at Best Lambda: ", errorT),file=text_file)
+    print("{}{:.6f}".format("Test Error at Best Lambda: ", test_errorT),file=text_file)
+    print("\n", file=text_file)
+    print("Top 5 terms with largest weight: ",file=text_file)
+    for item in list(x_test.columns[b]):
+        print("{}\n".format(item),file=text_file)
+    print('lamdas', 'ValidationError', sep='\t',file=text_file)
+    writer.writerows(zip(lambdas,validationError))
+    print('lamdas', 'TestError', sep='\t',file=text_file)
+    writer.writerows(zip(lambdas,testError))
+    
+#with open(filename, 'a') as text_file:
+#    writer = csv.writer(text_file, delimiter='\t')
+#    writer.writerows(['lamdas', 'ValidationError'])
+#    writer.writerows(zip(lambdas,validationError))
+    
 #%%Plot
 fig, ax1 = plt.subplots()
-lns1 = ax1.plot(lambdas, validationError, 'b-',label='Validation error')
-lns2 = ax1.plot(lmb,error,marker='o',color='k',label="Best Lambda")
+lns1 = ax1.plot(lambdas, validationError, 'b-*',label='Validation error')
+
 ax1.set_xscale('symlog')
 ax1.set_ylabel('Sum Squared Error', color='k')
 ax1.tick_params('y', colors='k')
 ax1.set_xlabel('Lambda')
 
 #ax2 = ax1.twinx() #For secondary y-axis
-lns3 = ax1.plot(lambdas, testError,'r-', label='Test error')
+lns2 = ax1.plot(lambdas, testError,'r-*', label='Test error')
+plt.axvline(lmbV,color='b',linestyle='dashed', linewidth=2)
+plt.axvline(lmbT,color='r',linestyle='dashed', linewidth=2)
+plt.text(lmbV//10, errorV,'lowest validation error', fontsize=12)
+plt.text(lmbT//10, test_errorT,'lowest test error', fontsize=12)
+
 #ax2.set_ylabel('Sum Squared Error', color='r')
 #ax2.tick_params('y', colors='r')
 
@@ -215,7 +265,7 @@ lns3 = ax1.plot(lambdas, testError,'r-', label='Test error')
 #ax.semilogx(lmb,error,marker='o',color='r',label="Best Lambda")
 
 # Legend
-lns = lns1+lns2+lns3
+lns = lns1+lns2
 labs = [l.get_label() for l in lns]
 ax1.legend(lns, labs, loc=0)
 

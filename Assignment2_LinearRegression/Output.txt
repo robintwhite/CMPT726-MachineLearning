@@ -1,0 +1,39 @@
+Best Lambda from Validation: 100.0000
+Validation Error at Best Lambda: 0.004520
+Test Error at Best Lambda: 0.014509
+
+
+Best Lambda from Test: 1.0000
+Validation Error at Best Lambda: 0.004743
+Test Error at Best Lambda: 0.013522
+
+
+Top 5 terms with largest weight: 
+Position_R_Weight
+
+Height_rs_G
+
+country_group_CAN_rs_G
+
+rs_A
+
+Weight
+
+lamdas	ValidationError
+0	0.00694596398175
+0.001	0.00665323636983
+0.01	0.00608330924507
+0.1	0.00518871625696
+1	0.00474250266618
+10	0.00459778525751
+100	0.00451970086694
+1000	0.00455601826217
+lamdas	TestError
+0	0.0224043160075
+0.001	0.0186075641438
+0.01	0.0171118204901
+0.1	0.0150032624197
+1	0.0135216111251
+10	0.0139156843331
+100	0.0145094691526
+1000	0.014923957466
