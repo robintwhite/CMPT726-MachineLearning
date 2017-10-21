@@ -195,8 +195,8 @@ for L in lambdas:
 index = validationError.tolist().index(min(validationError))
 s = np.asarray(weightVavg)
 #5 weights with largest value from lambda with lowest error
-b = sorted(range(len(s[index])), key=lambda i: s[index][i])[-5:]
-print("{}{}".format("Top 5 terms with strongest weight (lowest to highest): ", x_test.columns[b]))
+bV = sorted(range(len(s[index])), key=lambda i: s[index][i])[-5:]
+print("{}{}".format("Top 5 terms with strongest weight (lowest to highest): ", x_test.columns[bV]))
 lmbV = lambdas[index]
 errorV = validationError[index]
 test_errorV = testError[index]
@@ -207,8 +207,8 @@ print("{}{:.6f}".format("Test Error at Best Lambda: ", test_errorV))
 #index for lambda with lowest test error
 index = testError.tolist().index(min(testError))
 s = np.asarray(weightVavg)
-b = sorted(range(len(s[index])), key=lambda i: s[index][i])[-5:]
-print("{}{}".format("Top 5 terms with strongest weight (lowest to highest): ", x_test.columns[b]))
+bT = sorted(range(len(s[index])), key=lambda i: s[index][i])[-5:]
+print("{}{}".format("Top 5 terms with strongest weight (lowest to highest): ", x_test.columns[bT]))
 lmbT = lambdas[index]
 errorT = validationError[index]
 test_errorT = testError[index]
@@ -224,13 +224,18 @@ with open(filename, "w") as text_file:
     print("{}{:.6f}".format("Validation Error at Best Lambda: ", errorV),file=text_file)
     print("{}{:.6f}".format("Test Error at Best Lambda: ", test_errorV),file=text_file)
     print("\n", file=text_file)
+    print("Top 5 terms with largest weight (lowest to highest): ",file=text_file)
+    for item in list(x_test.columns[bV]):
+        print("{}".format(item),file=text_file)
+    print("\n", file=text_file)
     print("{}{:.4f}".format("Best Lambda from Test: ", lmbT),file=text_file)
     print("{}{:.6f}".format("Validation Error at Best Lambda: ", errorT),file=text_file)
     print("{}{:.6f}".format("Test Error at Best Lambda: ", test_errorT),file=text_file)
     print("\n", file=text_file)
-    print("Top 5 terms with largest weight: ",file=text_file)
-    for item in list(x_test.columns[b]):
-        print("{}\n".format(item),file=text_file)
+    print("Top 5 terms with largest weight (lowest to highest): ",file=text_file)
+    for item in list(x_test.columns[bT]):
+        print("{}".format(item),file=text_file)
+    print("\n", file=text_file)
     print('lamdas', 'ValidationError', sep='\t',file=text_file)
     writer.writerows(zip(lambdas,validationError))
     print('lamdas', 'TestError', sep='\t',file=text_file)

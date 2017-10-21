@@ -1,39 +1,44 @@
 Best Lambda from Validation: 100.0000
-Validation Error at Best Lambda: 0.004520
-Test Error at Best Lambda: 0.014509
+Validation Error at Best Lambda: 0.004581
+Test Error at Best Lambda: 0.014513
+
+
+Top 5 terms with largest weight (lowest to highest): 
+country_group_CAN_po_A
+DraftAge_Position_L
+po_G_po_A
+po_G
+po_A
 
 
 Best Lambda from Test: 1.0000
-Validation Error at Best Lambda: 0.004743
-Test Error at Best Lambda: 0.013522
+Validation Error at Best Lambda: 0.004954
+Test Error at Best Lambda: 0.013531
 
 
-Top 5 terms with largest weight: 
+Top 5 terms with largest weight (lowest to highest): 
 Position_R_Weight
-
 Height_rs_G
-
 country_group_CAN_rs_G
-
 rs_A
-
 Weight
 
+
 lamdas	ValidationError
-0	0.00694596398175
-0.001	0.00665323636983
-0.01	0.00608330924507
-0.1	0.00518871625696
-1	0.00474250266618
-10	0.00459778525751
-100	0.00451970086694
-1000	0.00455601826217
+0	0.00750531472622
+0.001	0.00660929794455
+0.01	0.0060855085219
+0.1	0.00538146325713
+1	0.0049538014077
+10	0.00471535992111
+100	0.00458072578187
+1000	0.00459555905319
 lamdas	TestError
-0	0.0224043160075
-0.001	0.0186075641438
-0.01	0.0171118204901
-0.1	0.0150032624197
-1	0.0135216111251
-10	0.0139156843331
-100	0.0145094691526
-1000	0.014923957466
+0	0.0224460862135
+0.001	0.0184796850679
+0.01	0.0170090818653
+0.1	0.0149919700079
+1	0.0135309377603
+10	0.0139293541561
+100	0.0145133579265
+1000	0.0149235785592
