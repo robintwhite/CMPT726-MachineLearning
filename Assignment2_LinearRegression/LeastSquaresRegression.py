@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 """
 Created on Fri Oct 13 14:45:28 2017
-    Pre-processing of data before training
+    Linear regression using least squared error
+    10-fold cross validation and interaction terms implemented
 @author: Robin
 """
 
@@ -172,7 +173,8 @@ for L in lambdas:
         #weightV = normalEq(L, x_data, x_dataTarget)
         #Note .append inserts to 0 position
         #List of weights for trained data on each validation set
-        weightVList.insert(group_id, normalEq(L, x_data, x_dataTarget).tolist())
+        weightVList.insert(group_id, normalEq(L, x_data,
+                                              x_dataTarget).tolist())
         #Squared loss for test data in validation set Ignore:(1/(2*np.sqrt(ML_var(t_dataTarget))*len(t_data)))*
         LossList[group_id] = squaredErr(weightVList[group_id], t_data, t_dataTarget)
         
